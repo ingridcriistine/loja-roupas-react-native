@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import data from "@/constants/dataEx.json";
 import { Item } from "@/components/item";
+import React from "react";
 
 export default function List() {
   return (

@@ -1,15 +1,15 @@
 import { View, StyleSheet, Text } from "react-native"
 import { Image } from "expo-image"
+import React from "react"
 
 
-export const Item = ({name, age, date, image} : {name:string, age:string, date:string, image:string}) => {
+export const Item = ({tipo, tamanho, preco} : {tipo:string, tamanho:string, preco:string}) => {
     return(
         <>
             <View style={styles.itemList}>
-                <Image style={styles.img} source={image}/>
-                <Text style={styles.fontText}>{name}</Text>
-                <Text>{age}</Text>
-                <Text>{date}</Text>
+                <Text style={styles.fontText}>{tipo}</Text>
+                <Text>{tamanho}</Text>
+                <Text>{preco}</Text>
             </View>
         </>
     )

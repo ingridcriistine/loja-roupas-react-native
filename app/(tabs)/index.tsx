@@ -33,6 +33,8 @@ export default function HomeScreen() {
         }
         await addDoc(collection(FIREBASE_DB, "Produtos"), { tipo: tipo, tamanho: tamanho, preco: preco });
         setTipo('');
+        setTamanho('');
+        setPreco('');
     };
 
     const deleteProduto = async (id: string) => {
@@ -48,19 +50,35 @@ export default function HomeScreen() {
       const produtoRef = doc(FIREBASE_DB, "Produtos", id);
   
       await updateDoc(produtoRef, {
-          name: tipo,
+          tipo: tipo,
+          tamanho: tamanho,
+          preco: preco,
       });
   
       setTipo('');
+      setTamanho('');
+      setPreco('');
   };
 
     return (
         <View style={styles.container}>
             <TextInput
                 style={styles.input}
-                placeholder="Novo Produto"
+                placeholder="Produto"
                 value={tipo}
                 onChangeText={setTipo}
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="Tamanho"
+                value={tamanho}
+                onChangeText={setTamanho}
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="Preço"
+                value={preco}
+                onChangeText={setPreco}
             />
             <TouchableOpacity style={styles.button} onPress={addProduto}>
                 <Text style={styles.buttonText}>Adicionar</Text>
@@ -73,6 +91,8 @@ export default function HomeScreen() {
                     <View style={styles.produtoItem}>
                       <Text>{item.id}</Text>
                         <Text>{item.tipo}</Text>
+                        <Text>{item.tamanho}</Text>
+                        <Text>{item.preco}</Text>
                         <TouchableOpacity onPress={() => deleteProduto(item.id)}>
                             <Text style={styles.deleteButton}>Excluir</Text>
                         </TouchableOpacity>
