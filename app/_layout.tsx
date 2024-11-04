@@ -30,7 +30,7 @@ export default function RootLayout() {
       <Stack>
         <Stack.Screen name="index" options={{headerShown: false}}></Stack.Screen>
         <Stack.Screen name="(tabs)" options={{headerShown: false}}></Stack.Screen>
-        <Stack.Screen name="register" options={{headerShown: false}}></Stack.Screen>
+        <Stack.Screen name="perfil" options={{headerShown: false}}></Stack.Screen>
       </Stack>
     </>
   );
