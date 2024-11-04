@@ -8,6 +8,7 @@ import { StyleSheet, Image, Text, SafeAreaView, FlatList, StatusBar, View, Touch
 
 interface Produto {
   id: string,
+  desc: string,
   tipo: string,
   tamanho: string,
   preco: string
@@ -17,33 +18,30 @@ export default function TabTwoScreen() {
   const [produtos, setProdutos] = useState<Produto[]>([]); 
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(collection(FIREBASE_DB, "Produtos"), (snapshot) => {
-        const produtoList: Produto[] = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Produto[];
-        setProdutos(produtoList);
+      const unsubscribe = onSnapshot(collection(FIREBASE_DB, "Produtos"), (snapshot) => {
+          const produtoList: Produto[] = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Produto[];
+          const newFiltered = produtoList?.filter((item) => (item.tipo.toLowerCase() === "camiseta"));
+          setProdutos(newFiltered);
     });
 
     return () => unsubscribe();
 }, []);
+
   
   return (
     <>
-      <Text style={styles.text}>Produtos</Text>
-      <Link href={'/pages/secaoProdCamiseta'} style={styles.submenu}>Camisetas</Link>
-      <Link href={'/pages/secaoProdCamiseta'} style={styles.submenu}>Blusas</Link>
-      <Link href={'/pages/secaoProdBermuda'} style={styles.submenu}>Bermudas</Link>
-      <Link href={'/pages/secaoProdCamiseta'} style={styles.submenu}>Calças</Link>
-      <Link href={'/pages/secaoProdCamiseta'} style={styles.submenu}>Jaquetas de couro</Link>
+      <Text style={styles.text}>Camisetas</Text>
       <SafeAreaView style={styles.container}>
         <FlatList
           data={produtos}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
               <View style={styles.produtoItem}>
-                  <Text style={styles.title}>{item.tipo}</Text>
+                  <Text style={styles.title}>{item.desc}</Text>
                   <Text>{item.tamanho}</Text>
                   <Text>{item.preco}</Text>
               </View>
-          )}
+          )} 
         />
       </SafeAreaView>
     </>
@@ -63,7 +61,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    margin: 30,
+    margin: 30
   },
   item: {
     backgroundColor: "#f9c2ff",
@@ -104,10 +102,8 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     fontSize: 18,
-    marginBottom: 35,
     marginTop: 35,
-    alignItems: 'center',
-    fontWeight: 'bold'
+    alignItems: 'center'
   },
   submenu: {
     display: 'flex',

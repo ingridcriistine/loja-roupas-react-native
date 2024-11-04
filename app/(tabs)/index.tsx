@@ -5,6 +5,7 @@ import { collection, addDoc, deleteDoc, doc, onSnapshot, updateDoc } from "fireb
 
 interface Produto {
     id: string,
+    desc: string,
     tipo: string,
     tamanho: string,
     preco: string
@@ -12,6 +13,7 @@ interface Produto {
 
 export default function HomeScreen() {
     const [produtos, setProdutos] = useState<Produto[]>([]); 
+    const [desc, setDesc] = useState('');
     const [tipo, setTipo] = useState('');
     const [tamanho, setTamanho] = useState('');
     const [preco, setPreco] = useState('');
@@ -28,10 +30,11 @@ export default function HomeScreen() {
 
     const addProduto = async () => {
         if (tipo === "") {
-            Alert.alert("Por favor, insira um nome.");
+            Alert.alert("Por favor, insira um tipo.");
             return;
         }
-        await addDoc(collection(FIREBASE_DB, "Produtos"), { tipo: tipo, tamanho: tamanho, preco: preco });
+        await addDoc(collection(FIREBASE_DB, "Produtos"), { desc: desc, tipo: tipo, tamanho: tamanho, preco: preco });
+        setDesc('');
         setTipo('');
         setTamanho('');
         setPreco('');
@@ -55,6 +58,7 @@ export default function HomeScreen() {
           preco: preco,
       });
   
+      setDesc('');
       setTipo('');
       setTamanho('');
       setPreco('');
@@ -62,9 +66,16 @@ export default function HomeScreen() {
 
     return (
         <View style={styles.container}>
+            <Text style={styles.text}>Gerenciar Produtos</Text>
             <TextInput
                 style={styles.input}
-                placeholder="Produto"
+                placeholder="Descrição"
+                value={desc}
+                onChangeText={setDesc}
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="Tipo"
                 value={tipo}
                 onChangeText={setTipo}
             />
@@ -89,16 +100,21 @@ export default function HomeScreen() {
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
                     <View style={styles.produtoItem}>
-                      <Text>{item.id}</Text>
-                        <Text>{item.tipo}</Text>
-                        <Text>{item.tamanho}</Text>
-                        <Text>{item.preco}</Text>
-                        <TouchableOpacity onPress={() => deleteProduto(item.id)}>
-                            <Text style={styles.deleteButton}>Excluir</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => updateProduto(item.id)}>
-                            <Text style={styles.deleteButton}>Atualizar</Text>
-                        </TouchableOpacity>
+                        <View >
+                            <Text>{item.id}</Text>
+                            <Text>{item.desc}</Text>
+                            <Text>{item.tipo}</Text>
+                            <Text>{item.tamanho}</Text>
+                            <Text>{item.preco}</Text>
+                        </View>
+                        <View style={styles.produtoConfig}>
+                            <TouchableOpacity onPress={() => deleteProduto(item.id)}>
+                                <Text style={styles.deleteButton}>Excluir</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() => updateProduto(item.id)}>
+                                <Text style={styles.deleteButton}>Atualizar</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 )}
             />
@@ -131,14 +147,27 @@ const styles = StyleSheet.create({
         color: '#fff',
     },
     produtoItem: {
-        flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         padding: 10,
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',
+        flexDirection: 'row',
+        marginTop: 20
+    },
+    produtoConfig: {
+        padding: 20,
+        gap: 5,
+        alignItems: 'center',
     },
     deleteButton: {
         color: 'red',
     },
+    text: {
+        display: 'flex',
+        justifyContent: 'center',
+        fontSize: 18,
+        marginBottom: 25,
+        alignItems: 'center'
+    }
 });
